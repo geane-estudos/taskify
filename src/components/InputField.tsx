@@ -1,21 +1,30 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import './style.css';
 
 interface Props {
   todo: string;
   setTodo: React.Dispatch<React.SetStateAction<string>>;
-  handleAdd:(e: React.FormEvent) => void;
+  handleAdd: (e: React.FormEvent) => void;
 
 }
 
-const InputField = ({ todo, setTodo, handleAdd }: Props) => {
+const InputField: React.FC<Props> = ({ todo, setTodo, handleAdd }: Props) => {
+  const inputRef = useRef<HTMLInputElement>(null) //hooking para remover o fundo sombreado após o enter
+
   return (
-    <form className='input' onSubmit={handleAdd}>
-      <input type='input' 
-      value={todo}
-      onChange={(e) => setTodo(e.target.value)}
-      placeholder='Enter a task' 
-      className='input_box'>
+    <form
+      className='input'
+      onSubmit={(e) => {
+        handleAdd(e);
+        inputRef.current?.blur();
+      }}>
+      <input
+        ref={inputRef}
+        type='input'
+        value={todo}
+        onChange={(e) => setTodo(e.target.value)}
+        placeholder='Enter a task'
+        className='input_box'>
       </input>
       <button className='input_submit' type='submit'>Go</button>
     </form>
